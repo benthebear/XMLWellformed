@@ -1,0 +1,47 @@
+<?
+
+menu_cache_clear_all();
+
+function xmlwellformed_menu(){
+	$items['admin/xmlwellformed'] = array(
+	'title' => 'Check Wellformed',
+	'page callback' => 'xmlwellformed_show_admin',
+	'access callback' => 'user_access',
+	'access arguments' => array('administer content'),	
+	'file' => 'xmlwellformed.pages.inc',
+	);
+	return $items;
+}
+
+
+function _xml_is_wellformed($string){
+	$xml = @simplexml_load_string($string);
+	if(get_class($xml)!="SimpleXMLElement"){
+		unset($xml);
+		return false;
+	}else{
+		unset($xml);
+		return true;
+	}
+}
+
+
+function xmlwellformed_assert_node_wellformed($node){
+	if(!(_xml_is_wellformed("<text>".$node->body."</text>"))){
+		drupal_set_message(t("Your Node is not wellformed."), "error");
+	}else{
+		drupal_set_message(t("Your Node is wellformed"), "ok");
+	}
+}
+
+function xmlwellformed_nodeapi($node, $op, $arg = 0){
+	switch($op){
+		case 'insert':
+				xmlwellformed_assert_node_wellformed($node);
+			break;
+
+		case 'update':
+				xmlwellformed_assert_node_wellformed($node);
+			break;
+	}
+}

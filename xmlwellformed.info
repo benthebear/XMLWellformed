@@ -1,0 +1,6 @@
+; $Id:  $
+name = XML Wellformed
+description = Checks wether the Content of a Node is wellformed
+package = XML
+version = VERSION
+core = 6.x
